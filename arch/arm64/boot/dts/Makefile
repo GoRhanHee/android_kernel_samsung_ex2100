@@ -8,6 +8,15 @@ dtbo-y += exynos/exynos2100-smdk2100.dtbo
 dtb-y += exynos/exynos7-espresso.dtb
 dtb-$(CONFIG_SOC_EXYNOS2100) += exynos/exynos2100.dtb
 
+dtbo-$(CONFIG_MODEL_O1S) += samsung/o1sksx/o1s_kor_singlex_w01_r19.dtbo
+dtbo-$(CONFIG_MODEL_O1S) += samsung/o1sksx/o1s_kor_singlex_w01_r21.dtbo
+dtbo-$(CONFIG_MODEL_O1S) += samsung/o1sksx/o1s_kor_singlex_w01_r02.dtbo
+dtbo-$(CONFIG_MODEL_O1S) += samsung/o1sksx/o1s_kor_singlex_w01_r20.dtbo
+dtbo-$(CONFIG_MODEL_O1S) += samsung/o1sksx/o1s_kor_singlex_w01_r16.dtbo
+dtbo-$(CONFIG_MODEL_O1S) += samsung/o1sksx/o1s_kor_singlex_w01_r22.dtbo
+dtbo-$(CONFIG_MODEL_O1S) += samsung/o1sksx/o1s_kor_singlex_w01_r17.dtbo
+dtbo-$(CONFIG_MODEL_O1S) += samsung/o1sksx/o1s_kor_singlex_w01_r18.dtbo
+
 dtbo-$(CONFIG_MODEL_O1S) += samsung/o1s/o1s_eur_openx_w01_r02.dtbo
 dtbo-$(CONFIG_MODEL_O1S) += samsung/o1s/o1s_eur_openx_w01_r16.dtbo
 dtbo-$(CONFIG_MODEL_O1S) += samsung/o1s/o1s_eur_openx_w01_r22.dtbo
