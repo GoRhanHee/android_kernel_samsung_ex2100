@@ -32,5 +32,5 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ matrix.model }}-${{ matrix.branch }}-${{ matrix.variant }}
+        name: ${{ matrix.model }}_Kernel_File
         path: build/out/${{ matrix.model }}/*.zip
