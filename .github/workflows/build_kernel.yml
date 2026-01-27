@@ -6,85 +6,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-24.04
-
     strategy:
-      fail-fast: false
       matrix:
-        include:
-          - model: r9s
-            branch: 12-upstream
-            variant: ksu
-          - model: r9s
-            branch: 12-upstream
-            variant: susfs
-          - model: r9s
-            branch: 12-upstream
-            variant: vanilla
-    
-          - model: o1s
-            branch: 12-upstream
-            variant: ksu
-          - model: o1s
-            branch: 12-upstream
-            variant: susfs
-          - model: o1s
-            branch: 12-upstream
-            variant: vanilla
-    
-          - model: t2s
-            branch: 12-upstream
-            variant: ksu
-          - model: t2s
-            branch: 12-upstream
-            variant: susfs
-          - model: t2s
-            branch: 12-upstream
-            variant: vanilla
-    
-          - model: p3s
-            branch: 12-upstream
-            variant: ksu
-          - model: p3s
-            branch: 12-upstream
-            variant: susfs
-          - model: p3s
-            branch: 12-upstream
-            variant: vanilla
-    
-          - model: r9s
-            branch: ksun
-            variant: ksu
-          - model: r9s
-            branch: ksun
-            variant: susfs
-    
-          - model: o1s
-            branch: ksun
-            variant: ksu
-          - model: o1s
-            branch: ksun
-            variant: susfs
-    
-          - model: t2s
-            branch: ksun
-            variant: ksu
-          - model: t2s
-            branch: ksun
-            variant: susfs
-    
-          - model: p3s
-            branch: ksun
-            variant: ksu
-          - model: p3s
-            branch: ksun
-            variant: susfs
+        device: [o1s]
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        ref: ${{ matrix.branch }}
-        fetch-depth: 0
 
     - name: Update apt
       run: sudo apt-get update
@@ -96,21 +24,10 @@ jobs:
           bison binutils-dev libiberty-dev zip unzip libncurses5-dev curl git ninja-build \
           python3 libssl-dev gcc-aarch64-linux-gnu cpio gawk libarchive-tools lz4 repo
 
-    - name: Set build flags for variant
-      id: vars
-      run: |
-        if [ "${{ matrix.variant }}" = "ksu" ]; then
-          echo "FLAGS=-k y" >> $GITHUB_OUTPUT
-        elif [ "${{ matrix.variant }}" = "susfs" ]; then
-          echo "FLAGS=-k y -s y" >> $GITHUB_OUTPUT
-        else
-          echo "FLAGS=" >> $GITHUB_OUTPUT
-        fi
-
     - name: Run kernel build
       run: |
         chmod +x ./build.sh
-        ./build.sh -m ${{ matrix.model }} ${{ steps.vars.outputs.FLAGS }}
+        ./build.sh -m ${{ matrix.model }} -k y -s n
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
