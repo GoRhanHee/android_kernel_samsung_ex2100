@@ -46,17 +46,6 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-fetch_ksu() {
-
-    rm -rf "$PWD/KernelSU"
-
-        echo "Fetching latest RKSU"
-        git submodule update --init --recursive || {
-            echo "Failed to initialize RKSU submodule!"
-            exit 1
-        }
-}
-
 echo "Preparing the build environment..."
 
 pushd $(dirname "$0") > /dev/null
@@ -388,40 +377,6 @@ build_zip() {
     zip -r -qq ../"$NAME" .
     popd > /dev/null
 }
-
-KCONFIG_FILE="drivers/Kconfig"
-KSU='source "drivers/kernelsu/Kconfig"'
-MAKEFILE="drivers/Makefile"
-MAKEFILE_LINE='obj-$(CONFIG_KSU) += kernelsu/'
-
-if [[ "$KSU_OPTION" == "y" ]]; then
-
-    fetch_ksu
-
-    if [[ "$SUSFS_OPTION" == "y" ]]; then
-        KSU_BRANCH="susfs-rksu-master"
-    else
-        KSU_BRANCH="main"
-    fi
-
-    git -C KernelSU fetch origin
-    git -C KernelSU checkout -B "$KSU_BRANCH" "origin/$KSU_BRANCH"
-
-    if ! grep -Fxq "$KSU" "$KCONFIG_FILE"; then
-        sed -i "\|endmenu|i $KSU" "$KCONFIG_FILE"
-    fi
-
-    if ! grep -Fxq "$MAKEFILE_LINE" "$MAKEFILE"; then
-        echo "$MAKEFILE_LINE" >> "$MAKEFILE"
-    fi
-
-else
-
-    fetch_ksu
-    
-    sed -i "\|$KSU|d" "$KCONFIG_FILE"
-    sed -i "\|$MAKEFILE_LINE|d" "$MAKEFILE"
-fi
 
 build_kernel
 build_boot
