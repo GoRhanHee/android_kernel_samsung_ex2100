@@ -27,7 +27,7 @@ jobs:
     - name: Run kernel build
       run: |
         chmod +x ./build.sh
-        ./build.sh -m ${{ matrix.model }} -k y -s n
+        ./build.sh -m ${{ matrix.model }} -k y
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
