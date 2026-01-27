@@ -51,6 +51,9 @@ echo "Preparing the build environment..."
 pushd $(dirname "$0") > /dev/null
 CORES=$(nproc)
 
+# Import Submodule
+git submodule init && git submodule update --remote
+
 # Define toolchain variables
 CLANG_DIR=$PWD/toolchain/clang-r574158
 PATH=$CLANG_DIR/bin:$PATH
