@@ -16,7 +16,6 @@ Usage: $(basename "$0") [options]
 Options:
     -m, --model [value]    Specify the model code of the phone
     -k, --ksu [y/N]        Include KernelSU
-    -s, --susfs [y/N]      Include SuSFS
     -r, --recovery [y/N]   Compile kernel for an Android Recovery																 
 EOF
 }
@@ -29,10 +28,6 @@ while [[ $# -gt 0 ]]; do
             ;;
         --ksu|-k)
             KSU_OPTION="$2"
-            shift 2
-            ;;
-        --susfs|-s)
-            SUSFS_OPTION="$2"
             shift 2
             ;;
         --recovery|-r)
@@ -102,7 +97,6 @@ esac
 if [[ "$RECOVERY_OPTION" == "y" ]]; then
     RECOVERY=recovery.config
     KSU_OPTION=n
-    SUSFS_OPTION=n
 fi
 
 if [ -z $KSU_OPTION ]; then
@@ -111,10 +105,6 @@ fi
 
 if [[ "$KSU_OPTION" == "y" ]]; then
     KSU=ksu.config
-fi
-
-if [[ "$SUSFS_OPTION" == "y" ]]; then
-    SUSFS=susfs.config
 fi
 
 rm -rf build/out/$MODEL
@@ -129,17 +119,11 @@ build_kernel() {
     if [[ "$RECOVERY_OPTION" == "y" ]]; then
         RECOVERY=recovery.config
         KSU_OPTION=n
-        SUSFS_OPTION=n
     fi
     if [ -z "$KSU" ]; then
         echo "KSU: N"
     else
         echo "KSU: $KSU"
-    fi
-    if [ -z "$SUSFS" ]; then
-        echo "SUSFS: N"
-    else
-        echo "SUSFS: $SUSFS"
     fi
     if [ -z "$RECOVERY" ]; then
     echo "Recovery: N"
@@ -151,7 +135,7 @@ build_kernel() {
     echo "Building kernel using "$KERNEL_DEFCONFIG""
     echo "Generating configuration file..."
     echo "-----------------------------------------------"
-    make ${MAKE_ARGS} -j$CORES exynos2100_defconfig $MODEL.config $RECOVERY $KSU $SUSFS || abort
+    make ${MAKE_ARGS} -j$CORES exynos2100_defconfig $MODEL.config $RECOVERY $KSU || abort
 
     echo "Building kernel..."
     echo "-----------------------------------------------"
@@ -370,9 +354,7 @@ build_zip() {
     pushd build/out/$MODEL/zip > /dev/null
     DATE=`date +"%d-%m-%Y_%H-%M-%S"`
 
-    if [[ "$KSU_OPTION" == "y" && "$SUSFS_OPTION" == "y" ]]; then
-        NAME="${version}_${MODEL}_RKSU_SUSFS_OFFICIAL_${DATE}.zip"
-    elif [[ "$KSU_OPTION" == "y" ]]; then
+    if [[ "$KSU_OPTION" == "y" ]]; then
         NAME="${version}_${MODEL}_RKSU_OFFICIAL_${DATE}.zip"
     else
         NAME="${version}_${MODEL}_VANILLA_OFFICIAL_${DATE}.zip"
