@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        model: [o1s]
+        model: [o1s, p3s, r9s, t2s]
 
     steps:
     - name: Checkout repository
